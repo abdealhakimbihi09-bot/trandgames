@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Continue</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system;
+  background: #0d0d0f;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.card {
+  width: 90%;
+  max-width: 420px;
+  background: #1a1a1f;
+  border-radius: 18px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.desc {
+  font-size: 14px;
+  color: #bdbdc2;
+  margin-bottom: 20px;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 16px;
+  margin-top: 10px;
+  transition: 0.2s;
+}
+
+.primary {
+  background: #fff;
+  color: #000;
+}
+
+.primary:active {
+  transform: scale(0.97);
+}
+
+.secondary {
+  background: #2a2a30;
+  color: #fff;
+}
+
+.small {
+  margin-top: 16px;
+  font-size: 12px;
+  color: #8a8a90;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <div class="title">Continue to website</div>
+  <div class="desc" id="msg">
+    Preparing your access...
+  </div>
+
+  <a id="openBtn" class="btn primary">Open in Chrome</a>
+  <button id="copyBtn" class="btn secondary">Copy Link</button>
+
+  <div class="small">
+    If it doesn't open, tap the three dots in TikTok and choose "Open in browser"
+  </div>
+</div>
+
+<script>
+(function(){
+
+const ua = navigator.userAgent;
+const isTikTok = ua.includes("TikTok");
+const isAndroid = ua.includes("Android");
+
+const url = window.location.href;
+const clean = url.replace(/^https?:\/\//, "");
+
+const intent = "intent://" + clean +
+"#Intent;scheme=https;package=com.android.chrome;" +
+"S.browser_fallback_url=" + encodeURIComponent(url) +
+";end";
+
+const btn = document.getElementById("openBtn");
+const copy = document.getElementById("copyBtn");
+const msg = document.getElementById("msg");
+
+btn.href = isAndroid ? intent : url;
+
+copy.onclick = async () => {
+  try {
+    await navigator.clipboard.writeText(url);
+    copy.innerText = "Copied";
+  } catch {
+    copy.innerText = "Error";
+  }
+};
+
+if(isTikTok && isAndroid){
+
+  msg.innerText = "Opening Chrome for better experience...";
+
+  setTimeout(() => {
+    window.location.href = intent;
+  }, 500);
+
+} else if(isTikTok){
+
+  msg.innerText = "Please open this page in your browser";
+
+} else {
+
+  msg.innerText = "Redirecting...";
+  
+  // هنا تحط الرابط النهائي ديالك
+  setTimeout(() => {
+    window.location.href = "https://YOUR-OFFER-LINK.com";
+  }, 300);
+
+}
+
+})();
+</script>
+
+</body>
+</html>
